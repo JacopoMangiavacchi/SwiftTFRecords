@@ -1,208 +1,168 @@
+//
+//  SwiftTFRecords.swift
+//
+//
+//  Created by Jacopo Mangiavacchi on 11/1/19.
+//
+
 import Foundation
 
-// From proto !!
-enum FeatureType {
-   case Bytes, Float, Int64
+public enum Feature {
+    case Float(_ value: Float)
+    case Int(_ value: Int)
+    case Bytes(_ value: [UInt8])
+
+    func toFloat() -> Float? {
+        switch self {
+        case .Float(let value):
+            return value
+        default:
+            return nil
+        }
+    }
+
+    func toInt() -> Int? {
+        switch self {
+        case .Int(let value):
+            return value
+        default:
+            return nil
+        }
+    }
+    
+    func toBytes() -> [UInt8]? {
+        switch self {
+        case .Bytes(let value):
+            return value
+        default:
+            return nil
+        }
+    }
+    
+    func toString() -> String? {
+        switch self {
+        case .Bytes(let value):
+            if let string = String(bytes: value, encoding: .utf8) {
+                return string
+            }
+            return nil
+        default:
+            return nil
+        }
+    }
 }
 
-protocol Feature {
-   var type: FeatureType { get }
-   var _value: Any { get }
+// Utility Initializers for basic Literal types
+extension Feature: ExpressibleByFloatLiteral {
+    public init(floatLiteral: FloatLiteralType) {
+        self = Feature.Float(Swift.Float(floatLiteral))
+    }
 }
 
-struct FloatFeature : Feature {
-   internal var type: FeatureType
-   internal var _value: Any
-   var value: Float { _value as! Float }
-   
-   init(_ value: Float) {
-       self._value = value
-       self.type = .Float
-   }
-
-   init(_ value: Double) {
-       self._value = Float(value)
-       self.type = .Float
-   }
+extension Feature: ExpressibleByIntegerLiteral {
+    public init(integerLiteral: IntegerLiteralType) {
+        self = Feature.Int(integerLiteral)
+    }
 }
 
-struct Int64Feature : Feature {
-   internal var type: FeatureType
-   internal var _value: Any
-   var value: Int { _value as! Int }
-
-   init(_ value: Int) {
-       self._value = value
-       self.type = .Int64
-   }
-}
-
-struct BytesFeature : Feature {
-   internal var type: FeatureType
-   internal var _value: Any
-   var value: [Int8] { _value as! [Int8] }
-
-   init(_ value: [Int8]) {
-       self._value = value
-       self.type = .Bytes
-   }
-}
-
-struct FeatureArray {
-   internal let type: FeatureType
-   internal let value: [Feature]
-   
-   init(_ value: [Float]) {
-       self.type = .Float
-       self.value = value.map{ FloatFeature($0) }
-   }
-
-   init(_ value: [Double]) {
-       self.type = .Float
-       self.value = value.map{ FloatFeature($0) }
-   }
-
-   init(_ value: [Int]) {
-       self.type = .Int64
-       self.value = value.map{ Int64Feature($0) }
-   }
-
-   init(_ value: [[Int8]]) {
-       self.type = .Bytes
-       self.value = value.map{ BytesFeature($0) }
-   }
+extension Feature: ExpressibleByStringLiteral {
+    // By using 'StaticString' we disable string interpolation, for safety
+    public init(stringLiteral value: StaticString) {
+        self = Feature.Bytes(Array(String("\(value)").utf8))
+    }
 }
 
 struct Record {
-   var features = [String : Feature]()
-   var featureArrays = [String : FeatureArray]()
+    var features: [String : Feature]
+    var featureArrays: [String : [Feature]]
 
-   mutating func add(name: String, feature: Feature) {
-       features[name] = feature
-   }
+    var data: Data {
+        // TODO SAVE TF RECORD TO DATA
+        Data()
+    }
 
-   mutating func addArray(name: String, featureArray: FeatureArray) {
-       featureArrays[name] = featureArray
-   }
+    init() {
+        self.features = [String : Feature]()
+        self.featureArrays = [String : [Feature]]()
+    }
 
-   func get(name: String) -> Feature? {
-       return features[name]
-   }
+    init(withData data: Data) {
+        self.features = [String : Feature]()
+        self.featureArrays = [String : [Feature]]()
 
-   func getArray(name: String) -> FeatureArray? {
-       return featureArrays[name]
-   }
+        // TODO READ TF RECORD FROM DATA
+    }
+    
+    mutating func set(name: String, feature: Feature?) {
+        features[name] = feature
+    }
+
+    mutating func setArray(name: String, featureArray: [Feature]?) {
+        featureArrays[name] = featureArray
+    }
+
+    func get(name: String) -> Feature? {
+        return features[name]
+    }
+
+    func getArray(name: String) -> [Feature]? {
+        return featureArrays[name]
+    }
 }
 
-//Utility Initializers for basic Literal types
-//extension DataIO: ExpressibleByStringLiteral {
-//    // By using 'StaticString' we disable string interpolation, for safety
-//    public init(stringLiteral value: StaticString) {
-//        self = DataIO.DataString(value: "\(value)")
-//    }
-//}
+struct Builder {
+    var records: [Record]
 
-extension Int64Feature: ExpressibleByIntegerLiteral {
-   public init(integerLiteral: IntegerLiteralType) {
-       self = Int64Feature(Int(integerLiteral))
-   }
+    var data: Data {
+        // TODO SAVE TO TF RECORDS
+        Data()
+    }
+    
+    init() {
+        records = [Record]()
+    }
+
+    init(withRecords records: [Record]) {
+        self.records = records
+    }
+
+    mutating func add(_ record: Record) {
+        records.append(record)
+    }
+    
+    func save(to file: String) {
+        
+    }
 }
 
-//extension DataIO: ExpressibleByFloatLiteral {
-//    public init(floatLiteral: FloatLiteralType) {
-//        self = DataIO.DataFloat(value: Float(floatLiteral))
-//    }
-//}
+struct Reader {
+    var records: [Record] {
+        // TODO
+        [Record]()
+    }
+    
+    var count: Int {
+        // TODO
+        records.count
+    }
 
+    init(withData data: Data) {
+        // TODO
+    }
+    
+    init(withFile file: String) {
+        // TODO
+    }
 
+    // TODO ADD SUBSCRIPT
 
-class Main {
-   init() {
-       let i: Int64Feature = 1 //Int64Feature(1)
-       
-       var record = Record()
-       record.add(name: "first", feature: Int64Feature(1))
-       record.addArray(name: "second", featureArray: FeatureArray([1.0, 2.0, 3.0]))
-   }
+    // TODO ADD SUBSCRIPT WITH RANGE
 }
 
 
 
 
-
-
-
-
-//// From proto !!
-//enum FeatureType {
-//    case bytes, float, int64
-//}
-//
-//struct Feature {
-//    let type: FeatureType
-//    /*private*/ let _value: Any
-//
-//    // TODO ADD init()s for types
-//
-//    // TODO Getter()s for types
-//}
-//
-//struct FeatureArray {
-//    let type: FeatureType
-//    /*private*/ let _value: [Any] // ? [Feature]
-//
-//    // TODO ADD init()s for array of types
-//
-//    // TODO Getter()s for arrat of types
-//}
-//
-//struct Record {
-//    var features = [String : Feature]()
-//    var featureArrays = [String : FeatureArray]()
-//
-//    mutating func add(name: String, feature: Feature) {
-//        features[name] = feature
-//    }
-//
-//    mutating func addArray(name: String, featureArray: FeatureArray) {
-//        featureArrays[name] = featureArray
-//    }
-//
-//    func get(name: String) -> Feature? {
-//        return features[name]
-//    }
-//
-//    func getArray(name: String) -> FeatureArray? {
-//        return featureArrays[name]
-//    }
-//}
-//
-//struct Builder {
-//    var records: [Record]
-//
-//    init() {
-//        records = [Record]()
-//    }
-//
-//    init(withRecords records: [Record]) {
-//        self.records = records
-//    }
-//
-//    mutating func add(_ record: Record) {
-//        records.append(record)
-//    }
-//}
-//
-//struct Reader {
-//    let records: [Record]
-//    var count: Int { records.count }
-//
-//    init(withRecords records: [Record]) {
-//        self.records = records
-//    }
-//
-//    init(withData data: Data) {
-//        // TODO
-//        self.records = [Record]()
-//    }
-//}
+//// TEST
+//var record = Record()
+//record.add(name: "first", feature: "1")
+//record.addArray(name: "second", featureArray: [1.0, 2.0, 3.0])
