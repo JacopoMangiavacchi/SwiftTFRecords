@@ -1,5 +1,5 @@
 syntax = "proto3";
-package tensorflow;
+package tfrecords;
 
 // Containers to hold repeated fundamental values.
 message BytesList {
