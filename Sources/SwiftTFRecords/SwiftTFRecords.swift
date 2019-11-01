@@ -74,7 +74,7 @@ extension Feature: ExpressibleByStringLiteral {
 
 struct Record {
     var features: [String : Feature]
-    var featureArrays: [String : [Feature]]
+    var featureLists: [String : [Feature]]
 
     var data: Data {
         // TODO SAVE TF RECORD TO DATA
@@ -83,12 +83,12 @@ struct Record {
 
     init() {
         self.features = [String : Feature]()
-        self.featureArrays = [String : [Feature]]()
+        self.featureLists = [String : [Feature]]()
     }
 
     init(withData data: Data) {
         self.features = [String : Feature]()
-        self.featureArrays = [String : [Feature]]()
+        self.featureLists = [String : [Feature]]()
 
         // TODO READ TF RECORD FROM DATA
     }
@@ -97,16 +97,16 @@ struct Record {
         features[name] = feature
     }
 
-    mutating func setArray(name: String, featureArray: [Feature]?) {
-        featureArrays[name] = featureArray
+    mutating func setList(name: String, featureList: [Feature]?) {
+        featureLists[name] = featureList
     }
 
     func get(name: String) -> Feature? {
         return features[name]
     }
 
-    func getArray(name: String) -> [Feature]? {
-        return featureArrays[name]
+    func getList(name: String) -> [Feature]? {
+        return featureLists[name]
     }
 }
 
@@ -165,4 +165,4 @@ struct Reader {
 //// TEST
 //var record = Record()
 //record.add(name: "first", feature: "1")
-//record.addArray(name: "second", featureArray: [1.0, 2.0, 3.0])
+//record.addList(name: "second", featureList: [1.0, 2.0, 3.0])
