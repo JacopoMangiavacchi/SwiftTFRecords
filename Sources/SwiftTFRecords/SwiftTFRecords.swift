@@ -8,9 +8,9 @@
 import Foundation
 
 public enum Feature {
+    case Bytes(_ value: Data)
     case Float(_ value: Float)
     case Int(_ value: Int)
-    case Bytes(_ value: [UInt8])
 
     func toFloat() -> Float? {
         switch self {
@@ -30,7 +30,7 @@ public enum Feature {
         }
     }
     
-    func toBytes() -> [UInt8]? {
+    func toBytes() -> Data? {
         switch self {
         case .Bytes(let value):
             return value
@@ -68,7 +68,7 @@ extension Feature: ExpressibleByIntegerLiteral {
 extension Feature: ExpressibleByStringLiteral {
     // By using 'StaticString' we disable string interpolation, for safety
     public init(stringLiteral value: StaticString) {
-        self = Feature.Bytes(Array(String("\(value)").utf8))
+        self = Feature.Bytes(Data(String("\(value)").utf8))
     }
 }
 
@@ -76,9 +76,24 @@ struct Record {
     var context: [String : Feature]
     var featureLists: [String : [Feature]]
 
-    var data: Data {
+    var data: Data? {
         // TODO SAVE TF RECORD TO DATA
-        Data()
+        var example = Tfrecords_SequenceExample()
+
+        var intList = Tfrecords_Int64List()
+        intList.value = [1]
+        
+        var feature = Tfrecords_Feature()
+        feature.int64List = intList
+        
+        example.context.feature["aaa"] = feature
+
+        var featureList = Tfrecords_FeatureList()
+        featureList.feature = [feature]
+
+        example.featureLists.featureList["bbb"] = featureList
+        
+        return try? example.serializedData()
     }
 
     init() {
