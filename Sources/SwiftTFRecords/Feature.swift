@@ -30,15 +30,6 @@ public enum Feature {
         }
     }
     
-    func toInt64() -> Int64? {
-        switch self {
-        case .Int(let value):
-            return Int64(value)
-        default:
-            return nil
-        }
-    }
-    
     func toBytes() -> Data? {
         switch self {
         case .Bytes(let value):

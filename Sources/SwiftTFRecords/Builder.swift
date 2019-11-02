@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Builder {
+public struct Builder {
     var records: [Record]
 
     var data: Data {

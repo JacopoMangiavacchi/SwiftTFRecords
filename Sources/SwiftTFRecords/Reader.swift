@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Reader {
+public struct Reader {
     var records: [Record] {
         // TODO
         [Record]()
