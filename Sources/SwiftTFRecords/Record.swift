@@ -12,19 +12,74 @@ struct Record {
     var featureLists: [String : [Feature]]
 
     var data: Data? {
-        // TODO SAVE TF RECORD TO DATA
         var example = Tfrecords_SequenceExample()
 
-        var intList = Tfrecords_Int64List()
-        intList.value = [1]
-        
-        var feature = Tfrecords_Feature()
-        feature.int64List = intList
-        
-        example.context.feature["aaa"] = feature
+        // Add context
+        for (name, feature) in context {
+            var tfFeature = Tfrecords_Feature()
+            
+            switch feature {
+            case let .Bytes(value):
+                var list = Tfrecords_BytesList()
+                list.value = [value]
+                tfFeature.bytesList = list
 
+            case let .Float(value):
+                var list = Tfrecords_FloatList()
+                list.value = [value]
+                tfFeature.floatList = list
+
+            case let .Int(value):
+                var list = Tfrecords_Int64List()
+                list.value = [Int64(value)]
+                tfFeature.int64List = list
+            }
+            
+            example.context.feature[name] = tfFeature
+        }
+        
+        // Add featureLists
+        for (name, featureList) in featureLists {
+            if !featureList.isEmpty {
+                var tfFeature = Tfrecords_Feature()
+                
+                switch featureList[0] {
+                case let .Bytes(value):
+                    var list = Tfrecords_BytesList()
+                    list.value = featureList.compactMap{ $0.toBytes() }
+                    tfFeature.bytesList = list
+
+                case let .Float(value):
+                    var list = Tfrecords_FloatList()
+                    list.value = featureList.compactMap{ $0.toFloat() }
+                    tfFeature.floatList = list
+
+                case let .Int(value):
+                    var list = Tfrecords_Int64List()
+                    list.value = featureList.compactMap{ $0.toInt64() }
+                    tfFeature.int64List = list
+                }
+                
+                var tfFeatureList = Tfrecords_FeatureList()
+                tfFeatureList.feature = tfFeature
+
+                example.featureLists.featureList[name] = tfFeatureList
+            }
+        }
+
+        
+        
+        
+        
+        var tfFeature = Tfrecords_Feature()
+
+        var list = Tfrecords_Int64List()
+        list.value = [Int64(1)]
+        tfFeature.int64List = list
+
+        
         var featureList = Tfrecords_FeatureList()
-        featureList.feature = [feature]
+        featureList.feature = [tfFeature]
 
         example.featureLists.featureList["bbb"] = featureList
         
