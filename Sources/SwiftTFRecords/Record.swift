@@ -68,11 +68,11 @@ public struct Record {
         }
     }
     
-    mutating func set(name: String, feature: Feature?) {
+    mutating func set(_ name: String, feature: Feature?) {
         context[name] = feature
     }
 
-    func get(name: String) -> Feature? {
+    func get(_ name: String) -> Feature? {
         return context[name]
     }
 }
