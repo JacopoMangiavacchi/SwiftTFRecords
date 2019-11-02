@@ -45,8 +45,27 @@ public struct Record {
 
     init(withData data: Data) {
         self.context = [String : Feature]()
+        
+        guard let example = try? Tfrecords_Example(serializedData: data) else { return }
 
-        // TODO READ TF RECORD FROM DATA
+        for (name, feature) in example.features.feature {
+            switch feature.kind {
+            case let .bytesList(list):
+                if !list.value.isEmpty {
+                    context[name] = Feature.Bytes(list.value[0])
+                }
+            case let .floatList(list):
+                if !list.value.isEmpty {
+                    context[name] = Feature.Float(list.value[0])
+                }
+            case let .int64List(list):
+                if !list.value.isEmpty {
+                    context[name] = Feature.Int(Int(list.value[0]))
+                }
+            case .none:
+                break
+            }
+        }
     }
     
     mutating func set(name: String, feature: Feature?) {
