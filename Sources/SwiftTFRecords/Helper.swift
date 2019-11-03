@@ -13,6 +13,6 @@ func maskCrc(_ crc: UInt32) -> UInt32 {
 
 func intToArray(_ n: UInt32) -> [UInt8] {
     let data = withUnsafeBytes(of: n) { Data($0) }
-    return [UInt8](data.reversed())
+    return [UInt8](data)
 }
 
