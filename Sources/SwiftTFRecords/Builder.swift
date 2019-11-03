@@ -6,8 +6,13 @@
 //
 
 import Foundation
+import CryptoSwift
 
 public struct Builder {
+    private static func intToArray(_ n: Int32) -> [UInt8] {
+        return String(n).unicodeScalars.map{UInt8($0.value)}
+    }
+
     var records: [Record]
 
     var data: Data {
@@ -15,14 +20,14 @@ public struct Builder {
         
         for record in records {
             if let recordData = record.data, recordData.count > 0 {
-                var length32 = Int32(recordData.count)
                 var length64 = Int64(recordData.count)
-
-                let length32Buffer = Data(bytes: &length32, count: MemoryLayout.size(ofValue: length32))
                 let length64Buffer = Data(bytes: &length64, count: MemoryLayout.size(ofValue: length64))
 
-                var lengthMaskedCRC = Int32(3) //Int32(maskCrc(crc32c(length32Buffer)))
-                var dataMaskedCRC = Int32(3) //Int32(maskCrc(crc32c(recordData)))
+                let length32 = Int32(recordData.count)
+                let length32Array = Builder.intToArray(length32)
+                
+                var lengthMaskedCRC = Checksum.crc32c(length32Array) //Int32(maskCrc(crc32c(length32Buffer)))
+                var dataMaskedCRC = Checksum.crc32c(length32Array) //Int32(maskCrc(crc32c(recordData)))
 
                 data.append(length64Buffer)
                 data.append(Data(bytes: &lengthMaskedCRC, count: MemoryLayout.size(ofValue: lengthMaskedCRC)))
