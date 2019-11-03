@@ -15,11 +15,16 @@ public struct Builder {
         
         for record in records {
             if let recordData = record.data, recordData.count > 0 {
-                var length = Int64(recordData.count)
-                var lengthMaskedCRC = Int32(maskCrc(crc32c(length)))
-                var dataMaskedCRC = Int32(maskCrc(crc32c(recordData)))
+                var length32 = Int32(recordData.count)
+                var length64 = Int64(recordData.count)
 
-                data.append(Data(bytes: &length, count: MemoryLayout.size(ofValue: length)))
+                let length32Buffer = Data(bytes: &length32, count: MemoryLayout.size(ofValue: length32))
+                let length64Buffer = Data(bytes: &length64, count: MemoryLayout.size(ofValue: length64))
+
+                var lengthMaskedCRC = Int32(3) //Int32(maskCrc(crc32c(length32Buffer)))
+                var dataMaskedCRC = Int32(3) //Int32(maskCrc(crc32c(recordData)))
+
+                data.append(length64Buffer)
                 data.append(Data(bytes: &lengthMaskedCRC, count: MemoryLayout.size(ofValue: lengthMaskedCRC)))
                 data.append(recordData)
                 data.append(Data(bytes: &dataMaskedCRC, count: MemoryLayout.size(ofValue: dataMaskedCRC)))
