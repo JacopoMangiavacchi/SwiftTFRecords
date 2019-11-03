@@ -67,7 +67,7 @@ public struct TFRecords {
                 }
                 pos += 4
                 
-                let dataMaskedCRC = dataMaskedCRCExpected // TODO !!!
+                let dataMaskedCRC = maskCrc(Checksum.crc32c([UInt8](recordData)))
                 
                 if dataMaskedCRC == dataMaskedCRCExpected {
                     records.append(Record(withData: recordData))
