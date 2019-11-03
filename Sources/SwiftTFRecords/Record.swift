@@ -8,9 +8,9 @@
 import Foundation
 
 public struct Record {
-    var context: [String : Feature]
+    public var context: [String : Feature]
 
-    var data: Data? {
+    public var data: Data? {
         var example = Tfrecords_Example()
 
         for (name, feature) in context {
@@ -39,11 +39,11 @@ public struct Record {
         return try? example.serializedData()
     }
 
-    init() {
+    public init() {
         self.context = [String : Feature]()
     }
 
-    init(withData data: Data) {
+    public init(withData data: Data) {
         self.context = [String : Feature]()
         
         guard let example = try? Tfrecords_Example(serializedData: data) else { return }
@@ -68,11 +68,11 @@ public struct Record {
         }
     }
     
-    mutating func set(_ name: String, feature: Feature?) {
+    public mutating func set(_ name: String, feature: Feature?) {
         context[name] = feature
     }
 
-    func get(_ name: String) -> Feature? {
+    public func get(_ name: String) -> Feature? {
         return context[name]
     }
 }

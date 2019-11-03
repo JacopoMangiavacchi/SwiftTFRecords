@@ -12,7 +12,7 @@ public enum Feature {
     case Float(_ value: Float)
     case Int(_ value: Int)
 
-    func toFloat() -> Float? {
+    public func toFloat() -> Float? {
         switch self {
         case .Float(let value):
             return value
@@ -21,7 +21,7 @@ public enum Feature {
         }
     }
 
-    func toInt() -> Int? {
+    public func toInt() -> Int? {
         switch self {
         case .Int(let value):
             return value
@@ -30,7 +30,7 @@ public enum Feature {
         }
     }
     
-    func toBytes() -> Data? {
+    public func toBytes() -> Data? {
         switch self {
         case .Bytes(let value):
             return value
@@ -39,7 +39,7 @@ public enum Feature {
         }
     }
     
-    func toString() -> String? {
+    public func toString() -> String? {
         switch self {
         case .Bytes(let value):
             if let string = String(bytes: value, encoding: .utf8) {

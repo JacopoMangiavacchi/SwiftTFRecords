@@ -9,9 +9,9 @@ import Foundation
 import CryptoSwift
 
 public struct TFRecords {
-    var records: [Record]
+    public var records: [Record]
 
-    var data: Data {
+    public var data: Data {
         var data = Data()
         
         for record in records {
@@ -32,15 +32,15 @@ public struct TFRecords {
         return data
     }
     
-    init() {
+    public init() {
         records = [Record]()
     }
 
-    init(withRecords records: [Record]) {
+    public init(withRecords records: [Record]) {
         self.records = records
     }
     
-    init(withData data: Data) {
+    public init(withData data: Data) {
         var records = [Record]()
         var pos = 0
         while pos < data.count {
@@ -84,7 +84,7 @@ public struct TFRecords {
         self.records = records
     }
 
-    mutating func add(_ record: Record) {
+    public mutating func add(_ record: Record) {
         records.append(record)
     }
 }
