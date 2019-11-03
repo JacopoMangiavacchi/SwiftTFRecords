@@ -22,10 +22,6 @@ public struct Reader {
         // TODO
     }
     
-    init(withFile file: String) {
-        // TODO
-    }
-
     // TODO ADD SUBSCRIPT
 
     // TODO ADD SUBSCRIPT WITH RANGE
