@@ -23,12 +23,12 @@ public struct Reader {
         var pos = 0
         
         let length64 = data.subdata(in: pos..<pos+8).withUnsafeBytes {
-            $0.load(as: Int64.self)
+            $0.load(as: UInt64.self)
         }
         pos += 8
         
         let lengthMaskedCRC = data.subdata(in: pos..<pos+4).withUnsafeBytes {
-            $0.load(as: Int32.self)
+            $0.load(as: UInt32.self)
         }
         pos += 4
         
@@ -41,7 +41,7 @@ public struct Reader {
             pos += Int(length64)
             
             let dataMaskedCRCExpected = data.subdata(in: pos..<pos+4).withUnsafeBytes {
-                $0.load(as: Int32.self)
+                $0.load(as: UInt32.self)
             }
             pos += 4
             
