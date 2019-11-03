@@ -9,17 +9,10 @@ import Foundation
 import CryptoSwift
 
 public struct Reader {
-    var records: [Record] {
-        // TODO
-        [Record]()
-    }
-    
-    var count: Int {
-        // TODO
-        records.count
-    }
+    let records: [Record]
 
     init(withData data: Data) {
+        var records = [Record]()
         var pos = 0
         while pos < data.count {
             let length64 = data.subdata(in: pos..<pos+8).withUnsafeBytes {
@@ -48,11 +41,7 @@ public struct Reader {
                 let dataMaskedCRC = dataMaskedCRCExpected // TODO !!!
                 
                 if dataMaskedCRC == dataMaskedCRCExpected {
-                    
-                    print(" ==> OK")
-                    let record = Record(withData: recordData)
-
-                    
+                    records.append(Record(withData: recordData))
                 }
                 else {
                     print(" --> dataMaskedCRC != dataMaskedCRCExpected")
@@ -64,6 +53,8 @@ public struct Reader {
                 break
             }
         }
+        
+        self.records = records
     }
     
     // TODO ADD SUBSCRIPT

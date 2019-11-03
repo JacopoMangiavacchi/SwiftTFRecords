@@ -21,8 +21,17 @@ final class BuilderReaderTests: XCTestCase {
         
         let reader = Reader(withData: tfRecordIn)
         
-        
-        XCTAssertEqual(reader.count, 0)
+        XCTAssertEqual(reader.records.count, 2)
+
+        XCTAssertEqual(reader.records[0].context["Int1"]?.toInt(), 1)
+        XCTAssertEqual(reader.records[0].context["Float2.3"]?.toFloat(), 2.3)
+        XCTAssertEqual(reader.records[0].context["Bytes1234"]?.toBytes(), Data([1, 2, 3, 4]))
+        XCTAssertEqual(reader.records[0].context["StringJacopo"]?.toString(), "Jacopo 😃")
+
+        XCTAssertEqual(reader.records[1].context["Int1"]?.toInt(), 2)
+        XCTAssertEqual(reader.records[1].context["Float2.3"]?.toFloat(), 4.6)
+        XCTAssertEqual(reader.records[1].context["Bytes1234"]?.toBytes(), Data([5, 6, 7, 8]))
+        XCTAssertEqual(reader.records[1].context["StringJacopo"]?.toString(), "Jacopo 😃😃")
     }
 
     static var allTests = [
