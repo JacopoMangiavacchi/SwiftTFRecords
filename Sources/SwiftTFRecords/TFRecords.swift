@@ -16,10 +16,9 @@ public struct TFRecords {
         
         for record in records {
             if let recordData = record.data, recordData.count > 0 {
-                let length32 = UInt32(recordData.count)
                 var length64 = UInt64(recordData.count)
-                let length32Array = intToArray(length32)
-                var lengthMaskedCRC = maskCrc(Checksum.crc32c(length32Array))
+                let length64Array = intToArray(length64)
+                var lengthMaskedCRC = maskCrc(Checksum.crc32c(length64Array))
                 var dataMaskedCRC = maskCrc(Checksum.crc32c([UInt8](recordData)))
 
                 data.append(Data(bytes: &length64, count: MemoryLayout.size(ofValue: length64)))
@@ -54,9 +53,8 @@ public struct TFRecords {
             }
             pos += 4
             
-            let length32 = UInt32(length64)
-            let length32Array = intToArray(length32)
-            let lengthMaskedCRCExpected = maskCrc(Checksum.crc32c(length32Array))
+            let length64Array = intToArray(length64)
+            let lengthMaskedCRCExpected = maskCrc(Checksum.crc32c(length64Array))
 
             if lengthMaskedCRC == lengthMaskedCRCExpected {
                 let recordData = data.subdata(in: pos..<pos+Int(length64))
