@@ -31,6 +31,16 @@ public struct Record {
                 var list = Tfrecords_Int64List()
                 list.value = [Int64(value)]
                 tfFeature.int64List = list
+                
+            case let .FloatArray(value):
+                var list = Tfrecords_FloatList()
+                list.value = value
+                tfFeature.floatList = list
+
+            case let .IntArray(value):
+                var list = Tfrecords_Int64List()
+                list.value = value.map{ Int64($0) }
+                tfFeature.int64List = list
             }
             
             example.features.feature[name] = tfFeature
@@ -55,12 +65,24 @@ public struct Record {
                     context[name] = Feature.Bytes(list.value[0])
                 }
             case let .floatList(list):
-                if !list.value.isEmpty {
+                switch list.value.count {
+                case 0:
+                    break
+                case 1:
                     context[name] = Feature.Float(list.value[0])
+                default:
+                    context[name] = Feature.FloatArray(list.value)
                 }
             case let .int64List(list):
-                if !list.value.isEmpty {
+                switch list.value.count {
+                case 0:
+                    break
+                case 1:
                     context[name] = Feature.Int(Int(list.value[0]))
+                default:
+                    context[name] = Feature.IntArray(list.value.map { Int($0) })
+                }
+                if !list.value.isEmpty {
                 }
             case .none:
                 break
