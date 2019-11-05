@@ -11,6 +11,8 @@ public enum Feature {
     case Bytes(_ value: Data)
     case Float(_ value: Float)
     case Int(_ value: Int)
+    case FloatArray(_ value: [Float])
+    case IntArray(_ value: [Int])
 
     public func toFloat() -> Float? {
         switch self {
@@ -50,6 +52,25 @@ public enum Feature {
             return nil
         }
     }
+    
+    public func toFloatArray() -> [Float]? {
+        switch self {
+        case .FloatArray(let value):
+            return value
+        default:
+            return nil
+        }
+    }
+
+    public func toIntArray() -> [Int]? {
+        switch self {
+        case .IntArray(let value):
+            return value
+        default:
+            return nil
+        }
+    }
+    
 }
 
 // Utility Initializers for basic Literal types

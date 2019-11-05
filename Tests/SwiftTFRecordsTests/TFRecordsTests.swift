@@ -10,11 +10,15 @@ final class TFRecordsTests: XCTestCase {
         record1.set("Float", feature: 2.3)
         record1.set("Bytes", feature: Feature.Bytes(Data([1, 2, 3, 4])))
         record1.set("String", feature: "Jacopo 😃")
+        record1.set("IntArray", feature: Feature.IntArray([1, 2, 3, 4]))
+        record1.set("FloatArray", feature: Feature.FloatArray([2.1, 2.2, 2.3]))
 
         record2.set("Int", feature: 2)
         record2.set("Float", feature: 4.6)
         record2.set("Bytes", feature: Feature.Bytes(Data([5, 6, 7, 8])))
         record2.set("String", feature: "Jacopo 😃😃")
+        record2.set("IntArray", feature: Feature.IntArray([1, 2, 3, 4]))
+        record2.set("FloatArray", feature: Feature.FloatArray([2.1, 2.2, 2.3]))
 
         let tfRecordIn = TFRecords(withRecords: [record1, record2])
         let tfRecordInData = tfRecordIn.data
@@ -27,11 +31,15 @@ final class TFRecordsTests: XCTestCase {
         XCTAssertEqual(tfRecordOut.records[0].context["Float"]?.toFloat(), 2.3)
         XCTAssertEqual(tfRecordOut.records[0].context["Bytes"]?.toBytes(), Data([1, 2, 3, 4]))
         XCTAssertEqual(tfRecordOut.records[0].context["String"]?.toString(), "Jacopo 😃")
+        XCTAssertEqual(tfRecordOut.records[0].context["IntArray"]?.toIntArray(), [1, 2, 3, 4])
+        XCTAssertEqual(tfRecordOut.records[0].context["FloatArray"]?.toFloatArray(), [2.1, 2.2, 2.3])
 
         XCTAssertEqual(tfRecordOut.records[1].context["Int"]?.toInt(), 2)
         XCTAssertEqual(tfRecordOut.records[1].context["Float"]?.toFloat(), 4.6)
         XCTAssertEqual(tfRecordOut.records[1].context["Bytes"]?.toBytes(), Data([5, 6, 7, 8]))
         XCTAssertEqual(tfRecordOut.records[1].context["String"]?.toString(), "Jacopo 😃😃")
+        XCTAssertEqual(tfRecordOut.records[1].context["IntArray"]?.toIntArray(), [1, 2, 3, 4])
+        XCTAssertEqual(tfRecordOut.records[1].context["FloatArray"]?.toFloatArray(), [2.1, 2.2, 2.3])
     }
 
     static var allTests = [
