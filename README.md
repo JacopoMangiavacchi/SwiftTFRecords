@@ -25,12 +25,12 @@ import SwiftTFRecords
 
 var record = Record()
 
-record.set("Int", feature: 1)
-record.set("Float", feature: 2.3)
-record.set("String", feature: "Jacopo 😃")
-record.set("Bytes", feature: Feature.Bytes(Data([1, 2, 3, 4])))
-record.set("IntArray", feature: Feature.IntArray([1, 2, 3, 4]))
-record.set("FloatArray", feature: Feature.FloatArray([2.1, 2.2, 2.3]))
+record["Int"] = 1
+record["Float"] = 2.3
+record["String"] = "Jacopo 😃"
+record["Bytes"] = Feature.Bytes(Data([1, 2, 3, 4])
+record["IntArray"] = Feature.IntArray([1, 2, 3, 4])
+record["FloatArray"] = Feature.FloatArray([2.1, 2.2, 2.3])
 
 let tfRecord = TFRecords(withRecords: [record])
 
@@ -51,12 +51,12 @@ let tfRecord = TFRecords(withData: data)
 
 for record in tfRecord.records {
     print("---")
-    print(record.get("Int")?.toInt())
-    print(record.get("Float")?.toFloat())
-    print(record.get("String")?.toString())
-    print(record.get("Bytes")?.toBytes())
-    print(record.get("IntArray")?.toIntArray())
-    print(record.get("FloatArray")?.toFloatArray())
+    print(record["Int"]?.toInt())
+    print(record["Float"]?.toFloat())
+    print(record["String"]?.toString())
+    print(record["Bytes"]?.toBytes())
+    print(record["IntArray"]?.toIntArray())
+    print(record["FloatArray"]?.toFloatArray())
 }
 
 ```
