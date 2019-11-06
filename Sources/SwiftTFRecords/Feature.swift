@@ -92,3 +92,13 @@ extension Feature: ExpressibleByStringLiteral {
         self = Feature.Bytes(Data(String("\(value)").utf8))
     }
 }
+
+extension Feature: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: Float...) {
+        self = Feature.FloatArray(elements)
+    }
+
+//    public init(arrayLiteral elements: Int...) {
+//        self = Feature.IntArray(elements)
+//    }
+}

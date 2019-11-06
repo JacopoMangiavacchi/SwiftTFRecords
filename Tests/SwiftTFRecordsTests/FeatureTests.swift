@@ -58,8 +58,8 @@ final class FeatureTests: XCTestCase {
     }
 
     func testFloatArray() {
-        let feature: Feature = Feature.FloatArray([1.1, 2.2, 3.3, 4.4])
-        
+        let feature: Feature = [1.1, 2.2, 3.3, 4.4]
+
         XCTAssertEqual(feature.toFloatArray(), [1.1, 2.2, 3.3, 4.4])
         XCTAssertNil(feature.toFloat())
         XCTAssertNil(feature.toBytes())

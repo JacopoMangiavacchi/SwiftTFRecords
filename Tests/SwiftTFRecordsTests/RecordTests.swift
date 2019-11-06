@@ -10,7 +10,7 @@ final class RecordTests: XCTestCase {
         recordIn.set("Bytes", feature: Feature.Bytes(Data([1, 2, 3, 4])))
         recordIn.set("String", feature: "Jacopo 😃")
         recordIn.set("IntArray", feature: Feature.IntArray([1, 2, 3, 4]))
-        recordIn.set("FloatArray", feature: Feature.FloatArray([2.1, 2.2, 2.3]))
+        recordIn.set("FloatArray", feature: [2.1, 2.2, 2.3])
 
         guard let data = recordIn.data else { return XCTFail() }
         
@@ -32,7 +32,7 @@ final class RecordTests: XCTestCase {
         recordIn["Bytes"] = Feature.Bytes(Data([1, 2, 3, 4]))
         recordIn["String"] = "Jacopo 😃"
         recordIn["IntArray"] = Feature.IntArray([1, 2, 3, 4])
-        recordIn["FloatArray"] = Feature.FloatArray([2.1, 2.2, 2.3])
+        recordIn["FloatArray"] = [2.1, 2.2, 2.3]
 
         guard let data = recordIn.data else { return XCTFail() }
         

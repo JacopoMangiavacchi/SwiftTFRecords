@@ -28,9 +28,9 @@ var record = Record()
 record["Int"] = 1
 record["Float"] = 2.3
 record["String"] = "Jacopo 😃"
+record["FloatArray"] = [2.1, 2.2, 2.3]
 record["Bytes"] = Feature.Bytes(Data([1, 2, 3, 4])
 record["IntArray"] = Feature.IntArray([1, 2, 3, 4])
-record["FloatArray"] = Feature.FloatArray([2.1, 2.2, 2.3])
 
 let tfRecord = TFRecords(withRecords: [record])
 
@@ -54,9 +54,9 @@ for record in tfRecord.records {
     print(record["Int"]?.toInt())
     print(record["Float"]?.toFloat())
     print(record["String"]?.toString())
+    print(record["FloatArray"]?.toFloatArray())
     print(record["Bytes"]?.toBytes())
     print(record["IntArray"]?.toIntArray())
-    print(record["FloatArray"]?.toFloatArray())
 }
 
 ```

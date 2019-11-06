@@ -11,14 +11,14 @@ final class TFRecordsTests: XCTestCase {
         record1.set("Bytes", feature: Feature.Bytes(Data([1, 2, 3, 4])))
         record1.set("String", feature: "Jacopo 😃")
         record1.set("IntArray", feature: Feature.IntArray([1, 2, 3, 4]))
-        record1.set("FloatArray", feature: Feature.FloatArray([2.1, 2.2, 2.3]))
+        record1.set("FloatArray", feature: [2.1, 2.2, 2.3])
 
         record2.set("Int", feature: 2)
         record2.set("Float", feature: 4.6)
         record2.set("Bytes", feature: Feature.Bytes(Data([5, 6, 7, 8])))
         record2.set("String", feature: "Jacopo 😃😃")
         record2.set("IntArray", feature: Feature.IntArray([1, 2, 3, 4]))
-        record2.set("FloatArray", feature: Feature.FloatArray([2.1, 2.2, 2.3]))
+        record2.set("FloatArray", feature: [2.1, 2.2, 2.3])
 
         let tfRecordIn = TFRecords(withRecords: [record1, record2])
         let tfRecordInData = tfRecordIn.data
