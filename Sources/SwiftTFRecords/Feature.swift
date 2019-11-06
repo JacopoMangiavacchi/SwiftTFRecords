@@ -14,6 +14,10 @@ public enum Feature {
     case FloatArray(_ value: [Float])
     case IntArray(_ value: [Int])
 
+    public static func String(_ value: Swift.String) -> Self {
+        return Feature.Bytes(Data(Swift.String("\(value)").utf8))
+    }
+    
     public func toFloat() -> Float? {
         switch self {
         case .Float(let value):
@@ -44,7 +48,7 @@ public enum Feature {
     public func toString() -> String? {
         switch self {
         case .Bytes(let value):
-            if let string = String(bytes: value, encoding: .utf8) {
+            if let string = Swift.String(bytes: value, encoding: .utf8) {
                 return string
             }
             return nil
@@ -89,7 +93,7 @@ extension Feature: ExpressibleByIntegerLiteral {
 extension Feature: ExpressibleByStringLiteral {
     // By using 'StaticString' we disable string interpolation, for safety
     public init(stringLiteral value: StaticString) {
-        self = Feature.Bytes(Data(String("\(value)").utf8))
+        self = Feature.Bytes(Data(Swift.String("\(value)").utf8))
     }
 }
 

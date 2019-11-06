@@ -46,6 +46,17 @@ final class FeatureTests: XCTestCase {
         XCTAssertNil(feature.toFloatArray())
     }
     
+    func testString2() {
+        let feature: Feature = Feature.String("Jacopo 😃")
+
+        XCTAssertEqual(feature.toString(), "Jacopo 😃")
+        XCTAssertEqual(feature.toBytes(), Data([74, 97, 99, 111, 112, 111, 32, 240, 159, 152, 131]))
+        XCTAssertNil(feature.toInt())
+        XCTAssertNil(feature.toFloat())
+        XCTAssertNil(feature.toIntArray())
+        XCTAssertNil(feature.toFloatArray())
+    }
+    
     func testIntArray() {
         let feature: Feature = Feature.IntArray([1, 2, 3, 4])
         
@@ -75,6 +86,7 @@ final class FeatureTests: XCTestCase {
         ("testFloat", testFloat),
         ("testBytes", testBytes),
         ("testString", testString),
+        ("testString2", testString2),
         ("testIntArray", testIntArray),
         ("testFloatArray", testFloatArray),
     ]
