@@ -8,12 +8,12 @@
 import Foundation
 
 public struct Record {
-    public var context: [String : Feature]
+    public var features: [String : Feature]
 
     public var data: Data? {
         var example = Tfrecords_Example()
 
-        for (name, feature) in context {
+        for (name, feature) in features {
             var tfFeature = Tfrecords_Feature()
             
             switch feature {
@@ -50,11 +50,11 @@ public struct Record {
     }
 
     public init() {
-        self.context = [String : Feature]()
+        self.features = [String : Feature]()
     }
 
     public init(withData data: Data) {
-        self.context = [String : Feature]()
+        self.features = [String : Feature]()
         
         guard let example = try? Tfrecords_Example(serializedData: data) else { return }
 
@@ -62,25 +62,25 @@ public struct Record {
             switch feature.kind {
             case let .bytesList(list):
                 if !list.value.isEmpty {
-                    context[name] = Feature.Bytes(list.value[0])
+                    features[name] = Feature.Bytes(list.value[0])
                 }
             case let .floatList(list):
                 switch list.value.count {
                 case 0:
                     break
                 case 1:
-                    context[name] = Feature.Float(list.value[0])
+                    features[name] = Feature.Float(list.value[0])
                 default:
-                    context[name] = Feature.FloatArray(list.value)
+                    features[name] = Feature.FloatArray(list.value)
                 }
             case let .int64List(list):
                 switch list.value.count {
                 case 0:
                     break
                 case 1:
-                    context[name] = Feature.Int(Int(list.value[0]))
+                    features[name] = Feature.Int(Int(list.value[0]))
                 default:
-                    context[name] = Feature.IntArray(list.value.map { Int($0) })
+                    features[name] = Feature.IntArray(list.value.map { Int($0) })
                 }
                 if !list.value.isEmpty {
                 }
@@ -91,10 +91,10 @@ public struct Record {
     }
     
     public mutating func set(_ name: String, feature: Feature?) {
-        context[name] = feature
+        features[name] = feature
     }
 
     public func get(_ name: String) -> Feature? {
-        return context[name]
+        return features[name]
     }
 }

@@ -27,19 +27,19 @@ final class TFRecordsTests: XCTestCase {
         
         XCTAssertEqual(tfRecordOut.records.count, 2)
 
-        XCTAssertEqual(tfRecordOut.records[0].context["Int"]?.toInt(), 1)
-        XCTAssertEqual(tfRecordOut.records[0].context["Float"]?.toFloat(), 2.3)
-        XCTAssertEqual(tfRecordOut.records[0].context["Bytes"]?.toBytes(), Data([1, 2, 3, 4]))
-        XCTAssertEqual(tfRecordOut.records[0].context["String"]?.toString(), "Jacopo 😃")
-        XCTAssertEqual(tfRecordOut.records[0].context["IntArray"]?.toIntArray(), [1, 2, 3, 4])
-        XCTAssertEqual(tfRecordOut.records[0].context["FloatArray"]?.toFloatArray(), [2.1, 2.2, 2.3])
+        XCTAssertEqual(tfRecordOut.records[0].features["Int"]?.toInt(), 1)
+        XCTAssertEqual(tfRecordOut.records[0].features["Float"]?.toFloat(), 2.3)
+        XCTAssertEqual(tfRecordOut.records[0].features["Bytes"]?.toBytes(), Data([1, 2, 3, 4]))
+        XCTAssertEqual(tfRecordOut.records[0].features["String"]?.toString(), "Jacopo 😃")
+        XCTAssertEqual(tfRecordOut.records[0].features["IntArray"]?.toIntArray(), [1, 2, 3, 4])
+        XCTAssertEqual(tfRecordOut.records[0].features["FloatArray"]?.toFloatArray(), [2.1, 2.2, 2.3])
 
-        XCTAssertEqual(tfRecordOut.records[1].context["Int"]?.toInt(), 2)
-        XCTAssertEqual(tfRecordOut.records[1].context["Float"]?.toFloat(), 4.6)
-        XCTAssertEqual(tfRecordOut.records[1].context["Bytes"]?.toBytes(), Data([5, 6, 7, 8]))
-        XCTAssertEqual(tfRecordOut.records[1].context["String"]?.toString(), "Jacopo 😃😃")
-        XCTAssertEqual(tfRecordOut.records[1].context["IntArray"]?.toIntArray(), [1, 2, 3, 4])
-        XCTAssertEqual(tfRecordOut.records[1].context["FloatArray"]?.toFloatArray(), [2.1, 2.2, 2.3])
+        XCTAssertEqual(tfRecordOut.records[1].features["Int"]?.toInt(), 2)
+        XCTAssertEqual(tfRecordOut.records[1].features["Float"]?.toFloat(), 4.6)
+        XCTAssertEqual(tfRecordOut.records[1].features["Bytes"]?.toBytes(), Data([5, 6, 7, 8]))
+        XCTAssertEqual(tfRecordOut.records[1].features["String"]?.toString(), "Jacopo 😃😃")
+        XCTAssertEqual(tfRecordOut.records[1].features["IntArray"]?.toIntArray(), [1, 2, 3, 4])
+        XCTAssertEqual(tfRecordOut.records[1].features["FloatArray"]?.toFloatArray(), [2.1, 2.2, 2.3])
     }
 
     static var allTests = [
