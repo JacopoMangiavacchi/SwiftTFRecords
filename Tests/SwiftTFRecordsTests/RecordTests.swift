@@ -24,7 +24,30 @@ final class RecordTests: XCTestCase {
         XCTAssertEqual(recordOut.get("FloatArray")?.toFloatArray(), [2.1, 2.2, 2.3])
     }
 
+    func testSubsriptRecord() {
+        var recordIn = Record()
+        
+        recordIn["Int"] = 1
+        recordIn["Float"] = 2.3
+        recordIn["Bytes"] = Feature.Bytes(Data([1, 2, 3, 4]))
+        recordIn["String"] = "Jacopo 😃"
+        recordIn["IntArray"] = Feature.IntArray([1, 2, 3, 4])
+        recordIn["FloatArray"] = Feature.FloatArray([2.1, 2.2, 2.3])
+
+        guard let data = recordIn.data else { return XCTFail() }
+        
+        let recordOut = Record(withData: data)
+        
+        XCTAssertEqual(recordOut["Int"]?.toInt(), 1)
+        XCTAssertEqual(recordOut["Float"]?.toFloat(), 2.3)
+        XCTAssertEqual(recordOut["Bytes"]?.toBytes(), Data([1, 2, 3, 4]))
+        XCTAssertEqual(recordOut["String"]?.toString(), "Jacopo 😃")
+        XCTAssertEqual(recordOut["IntArray"]?.toIntArray(), [1, 2, 3, 4])
+        XCTAssertEqual(recordOut["FloatArray"]?.toFloatArray(), [2.1, 2.2, 2.3])
+    }
+
     static var allTests = [
         ("testPersistRecord", testPersistRecord),
+        ("testSubsriptRecord", testSubsriptRecord),
     ]
 }

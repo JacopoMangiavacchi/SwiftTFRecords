@@ -96,6 +96,16 @@ public struct Record {
     }
 
     public func get(_ name: String) -> Feature? {
-        return features[name]
+        features[name]
+    }
+    
+    public subscript(name: String) -> Feature? {
+      get {
+        features[name]
+      }
+
+      set (newValue) {
+        features[name] = newValue
+      }
     }
 }
