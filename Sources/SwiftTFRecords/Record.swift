@@ -64,6 +64,7 @@ public struct Record {
                 if !list.value.isEmpty {
                     features[name] = Feature.Bytes(list.value[0])
                 }
+                
             case let .floatList(list):
                 switch list.value.count {
                 case 0:
@@ -73,6 +74,7 @@ public struct Record {
                 default:
                     features[name] = Feature.FloatArray(list.value)
                 }
+                
             case let .int64List(list):
                 switch list.value.count {
                 case 0:
@@ -82,8 +84,7 @@ public struct Record {
                 default:
                     features[name] = Feature.IntArray(list.value.map { Int($0) })
                 }
-                if !list.value.isEmpty {
-                }
+                
             case .none:
                 break
             }

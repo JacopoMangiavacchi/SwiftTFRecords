@@ -56,27 +56,21 @@ public struct TFRecords {
             let length64Array = intToArray(length64)
             let lengthMaskedCRCExpected = maskCrc(Checksum.crc32c(length64Array))
 
-            if lengthMaskedCRC == lengthMaskedCRCExpected {
-                let recordData = data.subdata(in: pos..<pos+Int(length64))
-                pos += Int(length64)
-                
-                let dataMaskedCRCExpected = data.subdata(in: pos..<pos+4).withUnsafeBytes {
-                    $0.load(as: UInt32.self)
-                }
-                pos += 4
-                
-                let dataMaskedCRC = maskCrc(Checksum.crc32c([UInt8](recordData)))
-                
-                if dataMaskedCRC == dataMaskedCRCExpected {
-                    records.append(Record(withData: recordData))
-                }
-                else {
-                    break
-                }
+            guard lengthMaskedCRC == lengthMaskedCRCExpected else { break }
+
+            let recordData = data.subdata(in: pos..<pos+Int(length64))
+            pos += Int(length64)
+            
+            let dataMaskedCRCExpected = data.subdata(in: pos..<pos+4).withUnsafeBytes {
+                $0.load(as: UInt32.self)
             }
-            else {
-                break
-            }
+            pos += 4
+            
+            let dataMaskedCRC = maskCrc(Checksum.crc32c([UInt8](recordData)))
+            
+            guard dataMaskedCRC == dataMaskedCRCExpected else { break }
+            
+            records.append(Record(withData: recordData))
         }
         
         self.records = records
