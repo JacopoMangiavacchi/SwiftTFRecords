@@ -2,17 +2,6 @@ import XCTest
 @testable import SwiftTFRecords
 
 final class FeatureTests: XCTestCase {
-    func testInt() {
-        let feature: Feature = 17
-        
-        XCTAssertEqual(feature.toInt(), 17)
-        XCTAssertNil(feature.toFloat())
-        XCTAssertNil(feature.toBytes())
-        XCTAssertNil(feature.toString())
-        XCTAssertNil(feature.toIntArray())
-        XCTAssertNil(feature.toFloatArray())
-    }
-
     func testFloat() {
         let feature: Feature = 12.34
 
@@ -22,6 +11,21 @@ final class FeatureTests: XCTestCase {
         XCTAssertNil(feature.toString())
         XCTAssertNil(feature.toIntArray())
         XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toBytesArray())
+        XCTAssertNil(feature.toStringArray())
+    }
+
+    func testInt() {
+        let feature: Feature = 17
+        
+        XCTAssertEqual(feature.toInt(), 17)
+        XCTAssertNil(feature.toFloat())
+        XCTAssertNil(feature.toBytes())
+        XCTAssertNil(feature.toString())
+        XCTAssertNil(feature.toIntArray())
+        XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toBytesArray())
+        XCTAssertNil(feature.toStringArray())
     }
 
     func testBytes() {
@@ -33,41 +37,36 @@ final class FeatureTests: XCTestCase {
         XCTAssertNil(feature.toString())
         XCTAssertNil(feature.toIntArray())
         XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toBytesArray())
+        XCTAssertNil(feature.toStringArray())
     }
 
     func testString() {
         let feature: Feature = "Jacopo 😃"
 
         XCTAssertEqual(feature.toString(), "Jacopo 😃")
-        XCTAssertEqual(feature.toBytes(), Data([74, 97, 99, 111, 112, 111, 32, 240, 159, 152, 131]))
+        XCTAssertNil(feature.toBytes())
         XCTAssertNil(feature.toInt())
         XCTAssertNil(feature.toFloat())
         XCTAssertNil(feature.toIntArray())
         XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toBytesArray())
+        XCTAssertNil(feature.toStringArray())
     }
     
     func testString2() {
         let feature: Feature = Feature.String("Jacopo 😃")
 
         XCTAssertEqual(feature.toString(), "Jacopo 😃")
-        XCTAssertEqual(feature.toBytes(), Data([74, 97, 99, 111, 112, 111, 32, 240, 159, 152, 131]))
+        XCTAssertNil(feature.toBytes())
         XCTAssertNil(feature.toInt())
         XCTAssertNil(feature.toFloat())
         XCTAssertNil(feature.toIntArray())
         XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toBytesArray())
+        XCTAssertNil(feature.toStringArray())
     }
     
-    func testIntArray() {
-        let feature: Feature = Feature.IntArray([1, 2, 3, 4])
-        
-        XCTAssertEqual(feature.toIntArray(), [1, 2, 3, 4])
-        XCTAssertNil(feature.toFloat())
-        XCTAssertNil(feature.toBytes())
-        XCTAssertNil(feature.toString())
-        XCTAssertNil(feature.toInt())
-        XCTAssertNil(feature.toFloatArray())
-    }
-
     func testFloatArray() {
         let feature: Feature = [1.1, 2.2, 3.3, 4.4]
 
@@ -77,17 +76,58 @@ final class FeatureTests: XCTestCase {
         XCTAssertNil(feature.toString())
         XCTAssertNil(feature.toInt())
         XCTAssertNil(feature.toIntArray())
+        XCTAssertNil(feature.toBytesArray())
+        XCTAssertNil(feature.toStringArray())
     }
 
+    func testIntArray() {
+        let feature: Feature = Feature.IntArray([1, 2, 3, 4])
+        
+        XCTAssertEqual(feature.toIntArray(), [1, 2, 3, 4])
+        XCTAssertNil(feature.toFloat())
+        XCTAssertNil(feature.toBytes())
+        XCTAssertNil(feature.toString())
+        XCTAssertNil(feature.toInt())
+        XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toBytesArray())
+        XCTAssertNil(feature.toStringArray())
+    }
 
+    func testBytesArray() {
+        let feature: Feature = Feature.BytesArray([Data([1, 2]), Data([3, 4])])
+        
+        XCTAssertEqual(feature.toBytesArray(), [Data([1, 2]), Data([3, 4])])
+        XCTAssertNil(feature.toFloat())
+        XCTAssertNil(feature.toBytes())
+        XCTAssertNil(feature.toString())
+        XCTAssertNil(feature.toInt())
+        XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toIntArray())
+        XCTAssertNil(feature.toStringArray())
+    }
+
+    func testStringArray() {
+        let feature: Feature = Feature.StringArray(["a", "b", "c"])
+        
+        XCTAssertEqual(feature.toStringArray(), ["a", "b", "c"])
+        XCTAssertNil(feature.toFloat())
+        XCTAssertNil(feature.toBytes())
+        XCTAssertNil(feature.toString())
+        XCTAssertNil(feature.toInt())
+        XCTAssertNil(feature.toFloatArray())
+        XCTAssertNil(feature.toIntArray())
+        XCTAssertNil(feature.toBytesArray())
+    }
 
     static var allTests = [
-        ("testInt", testInt),
         ("testFloat", testFloat),
+        ("testInt", testInt),
         ("testBytes", testBytes),
         ("testString", testString),
         ("testString2", testString2),
-        ("testIntArray", testIntArray),
         ("testFloatArray", testFloatArray),
+        ("testIntArray", testIntArray),
+        ("testBytesArray", testBytesArray),
+        ("testStringArray", testStringArray),
     ]
 }
