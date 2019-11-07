@@ -8,14 +8,21 @@
 import Foundation
 
 public enum Feature {
-    case Bytes(_ value: Data)
     case Float(_ value: Float)
     case Int(_ value: Int)
+    case Bytes(_ value: Data)
     case FloatArray(_ value: [Float])
     case IntArray(_ value: [Int])
+    case BytesArray(_ value: [Data])
 
+    // Not possible to define String as enum case as TFRecords protobut only manage generic Bytes (Data)
     public static func String(_ value: Swift.String) -> Self {
         return Feature.Bytes(Data(Swift.String("\(value)").utf8))
+    }
+    
+    // Not possible to define StringArray as enum case as TFRecords protobut only manage generic Bytes (Data)
+    public static func StringArray(_ value: [Swift.String]) -> Self {
+        return Feature.BytesArray(value.map{ Data(Swift.String("\($0)").utf8) })
     }
     
     public func toFloat() -> Float? {
@@ -45,18 +52,6 @@ public enum Feature {
         }
     }
     
-    public func toString() -> String? {
-        switch self {
-        case .Bytes(let value):
-            if let string = Swift.String(bytes: value, encoding: .utf8) {
-                return string
-            }
-            return nil
-        default:
-            return nil
-        }
-    }
-    
     public func toFloatArray() -> [Float]? {
         switch self {
         case .FloatArray(let value):
@@ -75,6 +70,36 @@ public enum Feature {
         }
     }
     
+    public func toBytesArray() -> [Data]? {
+        switch self {
+        case .BytesArray(let value):
+            return value
+        default:
+            return nil
+        }
+    }
+    
+    public func toString() -> Swift.String? {
+        switch self {
+        case .Bytes(let value):
+            if let string = Swift.String(bytes: value, encoding: .utf8) {
+                return string
+            }
+            
+            return nil
+        default:
+            return nil
+        }
+    }
+        
+    public func toStringArray() -> [Swift.String]? {
+        switch self {
+        case .BytesArray(let value):
+            return value.compactMap{ Swift.String(bytes: $0, encoding: .utf8) }
+        default:
+            return nil
+        }
+    }
 }
 
 // Utility Initializers for basic Literal types
@@ -93,11 +118,12 @@ extension Feature: ExpressibleByIntegerLiteral {
 extension Feature: ExpressibleByStringLiteral {
     // By using 'StaticString' we disable string interpolation, for safety
     public init(stringLiteral value: StaticString) {
-        self = Feature.Bytes(Data(Swift.String("\(value)").utf8))
+        self = Feature.String(Swift.String("\(value)"))
     }
 }
 
 extension Feature: ExpressibleByArrayLiteral {
+    // Default to Float Array
     public init(arrayLiteral elements: Float...) {
         self = Feature.FloatArray(elements)
     }

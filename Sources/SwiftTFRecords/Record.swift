@@ -17,11 +17,6 @@ public struct Record {
             var tfFeature = Tfrecords_Feature()
             
             switch feature {
-            case let .Bytes(value):
-                var list = Tfrecords_BytesList()
-                list.value = [value]
-                tfFeature.bytesList = list
-
             case let .Float(value):
                 var list = Tfrecords_FloatList()
                 list.value = [value]
@@ -32,6 +27,11 @@ public struct Record {
                 list.value = [Int64(value)]
                 tfFeature.int64List = list
                 
+            case let .Bytes(value):
+                var list = Tfrecords_BytesList()
+                list.value = [value]
+                tfFeature.bytesList = list
+
             case let .FloatArray(value):
                 var list = Tfrecords_FloatList()
                 list.value = value
@@ -41,6 +41,11 @@ public struct Record {
                 var list = Tfrecords_Int64List()
                 list.value = value.map{ Int64($0) }
                 tfFeature.int64List = list
+
+            case let .BytesArray(value):
+                var list = Tfrecords_BytesList()
+                list.value = value
+                tfFeature.bytesList = list
             }
             
             example.features.feature[name] = tfFeature
@@ -60,11 +65,6 @@ public struct Record {
 
         for (name, feature) in example.features.feature {
             switch feature.kind {
-            case let .bytesList(list):
-                if !list.value.isEmpty {
-                    features[name] = Feature.Bytes(list.value[0])
-                }
-                
             case let .floatList(list):
                 switch list.value.count {
                 case 0:
@@ -85,6 +85,16 @@ public struct Record {
                     features[name] = Feature.IntArray(list.value.map { Int($0) })
                 }
                 
+            case let .bytesList(list):
+                switch list.value.count {
+                case 0:
+                    break
+                case 1:
+                    features[name] = Feature.Bytes(list.value[0])
+                default:
+                    features[name] = Feature.BytesArray(list.value)
+                }
+
             case .none:
                 break
             }
