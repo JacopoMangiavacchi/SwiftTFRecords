@@ -45,7 +45,7 @@ final class FeatureTests: XCTestCase {
         let feature: Feature = "Jacopo 😃"
 
         XCTAssertEqual(feature.toString(), "Jacopo 😃")
-        XCTAssertNil(feature.toBytes())
+        XCTAssertEqual(feature.toBytes(), Data([74, 97, 99, 111, 112, 111, 32, 240, 159, 152, 131]))
         XCTAssertNil(feature.toInt())
         XCTAssertNil(feature.toFloat())
         XCTAssertNil(feature.toIntArray())
@@ -58,7 +58,7 @@ final class FeatureTests: XCTestCase {
         let feature: Feature = Feature.String("Jacopo 😃")
 
         XCTAssertEqual(feature.toString(), "Jacopo 😃")
-        XCTAssertNil(feature.toBytes())
+        XCTAssertEqual(feature.toBytes(), Data([74, 97, 99, 111, 112, 111, 32, 240, 159, 152, 131]))
         XCTAssertNil(feature.toInt())
         XCTAssertNil(feature.toFloat())
         XCTAssertNil(feature.toIntArray())
@@ -97,26 +97,26 @@ final class FeatureTests: XCTestCase {
         let feature: Feature = Feature.BytesArray([Data([1, 2]), Data([3, 4])])
         
         XCTAssertEqual(feature.toBytesArray(), [Data([1, 2]), Data([3, 4])])
+        XCTAssertEqual(feature.toStringArray(), ["\u{01}\u{02}", "\u{03}\u{04}"])
         XCTAssertNil(feature.toFloat())
         XCTAssertNil(feature.toBytes())
         XCTAssertNil(feature.toString())
         XCTAssertNil(feature.toInt())
         XCTAssertNil(feature.toFloatArray())
         XCTAssertNil(feature.toIntArray())
-        XCTAssertNil(feature.toStringArray())
     }
 
     func testStringArray() {
         let feature: Feature = Feature.StringArray(["a", "b", "c"])
         
         XCTAssertEqual(feature.toStringArray(), ["a", "b", "c"])
+        XCTAssertEqual(feature.toBytesArray(), [Data([97]), Data([98]), Data([99])])
         XCTAssertNil(feature.toFloat())
         XCTAssertNil(feature.toBytes())
         XCTAssertNil(feature.toString())
         XCTAssertNil(feature.toInt())
         XCTAssertNil(feature.toFloatArray())
         XCTAssertNil(feature.toIntArray())
-        XCTAssertNil(feature.toBytesArray())
     }
 
     static var allTests = [

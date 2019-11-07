@@ -32,13 +32,6 @@ public struct Record {
                 list.value = [value]
                 tfFeature.bytesList = list
 
-            case let .String(value):
-                var list = Tfrecords_BytesList()
-                if let v = value.data(using: .utf8) {
-                    list.value.append(v)
-                }
-                tfFeature.bytesList = list
-
             case let .FloatArray(value):
                 var list = Tfrecords_FloatList()
                 list.value = value
@@ -53,11 +46,6 @@ public struct Record {
                 var list = Tfrecords_BytesList()
                 list.value = value
                 tfFeature.bytesList = list
-
-            case let .StringArray(value):
-                var list = Tfrecords_BytesList()
-                list.value = value.compactMap{ $0.data(using: .utf8) }
-                tfFeature.bytesList = list
             }
             
             example.features.feature[name] = tfFeature
@@ -70,7 +58,7 @@ public struct Record {
         self.features = [String : Feature]()
     }
 
-    public init(withData data: Data, ignoreString: Bool = false) {
+    public init(withData data: Data) {
         self.features = [String : Feature]()
         
         guard let example = try? Tfrecords_Example(serializedData: data) else { return }
@@ -102,19 +90,9 @@ public struct Record {
                 case 0:
                     break
                 case 1:
-                    if !ignoreString, let string = String(bytes: list.value[0], encoding: .utf8) {
-                        features[name] = Feature.String(string)
-                    }
-                    else {
-                        features[name] = Feature.Bytes(list.value[0])
-                    }
+                    features[name] = Feature.Bytes(list.value[0])
                 default:
-                    if !ignoreString, let _ = String(bytes: list.value[0], encoding: .utf8) {
-                        features[name] = Feature.StringArray(list.value.compactMap{ String(bytes: $0, encoding: .utf8) })
-                    }
-                    else {
-                        features[name] = Feature.BytesArray(list.value)
-                    }
+                    features[name] = Feature.BytesArray(list.value)
                 }
 
             case .none:

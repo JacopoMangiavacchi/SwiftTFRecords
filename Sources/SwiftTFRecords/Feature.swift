@@ -11,12 +11,20 @@ public enum Feature {
     case Float(_ value: Float)
     case Int(_ value: Int)
     case Bytes(_ value: Data)
-    case String(_ value: String)
     case FloatArray(_ value: [Float])
     case IntArray(_ value: [Int])
     case BytesArray(_ value: [Data])
-    case StringArray(_ value: [String])
 
+    // Not possible to define String as enum case as TFRecords protobut only manage generic Bytes (Data)
+    public static func String(_ value: Swift.String) -> Self {
+        return Feature.Bytes(Data(Swift.String("\(value)").utf8))
+    }
+    
+    // Not possible to define StringArray as enum case as TFRecords protobut only manage generic Bytes (Data)
+    public static func StringArray(_ value: [Swift.String]) -> Self {
+        return Feature.BytesArray(value.map{ Data(Swift.String("\($0)").utf8) })
+    }
+    
     public func toFloat() -> Float? {
         switch self {
         case .Float(let value):
@@ -44,15 +52,6 @@ public enum Feature {
         }
     }
     
-    public func toString() -> String? {
-        switch self {
-        case .String(let value):
-            return value
-        default:
-            return nil
-        }
-    }
-        
     public func toFloatArray() -> [Float]? {
         switch self {
         case .FloatArray(let value):
@@ -80,10 +79,23 @@ public enum Feature {
         }
     }
     
-    public func toStringArray() -> [String]? {
+    public func toString() -> Swift.String? {
         switch self {
-        case .StringArray(let value):
-            return value
+        case .Bytes(let value):
+            if let string = Swift.String(bytes: value, encoding: .utf8) {
+                return string
+            }
+            
+            return nil
+        default:
+            return nil
+        }
+    }
+        
+    public func toStringArray() -> [Swift.String]? {
+        switch self {
+        case .BytesArray(let value):
+            return value.compactMap{ Swift.String(bytes: $0, encoding: .utf8) }
         default:
             return nil
         }
