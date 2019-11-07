@@ -1,7 +1,7 @@
 # SwiftTFRecords
 **TFRecords (.tfrecord) file format builder and reader for Swift**
 
-![](https://github.com/jacopomangiavacchi/swifttfrecords/workflows/CI%20Build/badge.svg)
+![](https://github.com/jacopomangiavacchi/swifttfrecords/workflows/swift/badge.svg)
 
 The TFRecords format is briefly documented
 [here](https://www.tensorflow.org/api_guides/python/python_io#tfrecords_format_details),
