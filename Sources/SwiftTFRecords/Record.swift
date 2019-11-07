@@ -17,21 +17,6 @@ public struct Record {
             var tfFeature = Tfrecords_Feature()
             
             switch feature {
-            case let .Float(value):
-                var list = Tfrecords_FloatList()
-                list.value = [value]
-                tfFeature.floatList = list
-
-            case let .Int(value):
-                var list = Tfrecords_Int64List()
-                list.value = [Int64(value)]
-                tfFeature.int64List = list
-                
-            case let .Bytes(value):
-                var list = Tfrecords_BytesList()
-                list.value = [value]
-                tfFeature.bytesList = list
-
             case let .FloatArray(value):
                 var list = Tfrecords_FloatList()
                 list.value = value
@@ -66,32 +51,17 @@ public struct Record {
         for (name, feature) in example.features.feature {
             switch feature.kind {
             case let .floatList(list):
-                switch list.value.count {
-                case 0:
-                    break
-                case 1:
-                    features[name] = Feature.Float(list.value[0])
-                default:
+                if !list.value.isEmpty {
                     features[name] = Feature.FloatArray(list.value)
                 }
                 
             case let .int64List(list):
-                switch list.value.count {
-                case 0:
-                    break
-                case 1:
-                    features[name] = Feature.Int(Int(list.value[0]))
-                default:
+                if !list.value.isEmpty {
                     features[name] = Feature.IntArray(list.value.map { Int($0) })
                 }
                 
             case let .bytesList(list):
-                switch list.value.count {
-                case 0:
-                    break
-                case 1:
-                    features[name] = Feature.Bytes(list.value[0])
-                default:
+                if !list.value.isEmpty {
                     features[name] = Feature.BytesArray(list.value)
                 }
 

@@ -8,9 +8,6 @@
 import Foundation
 
 public enum Feature {
-    case Float(_ value: Float)
-    case Int(_ value: Int)
-    case Bytes(_ value: Data)
     case FloatArray(_ value: [Float])
     case IntArray(_ value: [Int])
     case BytesArray(_ value: [Data])
@@ -24,38 +21,24 @@ public enum Feature {
     public static func StringArray(_ value: [Swift.String]) -> Self {
         return Feature.BytesArray(value.map{ Data(Swift.String("\($0)").utf8) })
     }
-    
-    public func toFloat() -> Float? {
-        switch self {
-        case .Float(let value):
-            return value
-        default:
-            return nil
-        }
+
+    public static func Float(_ value: Swift.Float) -> Self {
+        return Feature.FloatArray([value])
     }
 
-    public func toInt() -> Int? {
-        switch self {
-        case .Int(let value):
-            return value
-        default:
-            return nil
-        }
+    public static func Int(_ value: Swift.Int) -> Self {
+        return Feature.IntArray([value])
     }
-    
-    public func toBytes() -> Data? {
-        switch self {
-        case .Bytes(let value):
-            return value
-        default:
-            return nil
-        }
+
+    public static func Bytes(_ value: Data) -> Self {
+        return Feature.BytesArray([value])
     }
-    
+
     public func toFloatArray() -> [Float]? {
         switch self {
         case .FloatArray(let value):
             return value
+            
         default:
             return nil
         }
@@ -65,6 +48,7 @@ public enum Feature {
         switch self {
         case .IntArray(let value):
             return value
+            
         default:
             return nil
         }
@@ -74,6 +58,7 @@ public enum Feature {
         switch self {
         case .BytesArray(let value):
             return value
+            
         default:
             return nil
         }
@@ -81,12 +66,12 @@ public enum Feature {
     
     public func toString() -> Swift.String? {
         switch self {
-        case .Bytes(let value):
-            if let string = Swift.String(bytes: value, encoding: .utf8) {
+        case .BytesArray(let value):
+            if value.count == 1, let string = Swift.String(bytes: value[0], encoding: .utf8) {
                 return string
             }
-            
             return nil
+            
         default:
             return nil
         }
@@ -95,7 +80,48 @@ public enum Feature {
     public func toStringArray() -> [Swift.String]? {
         switch self {
         case .BytesArray(let value):
-            return value.compactMap{ Swift.String(bytes: $0, encoding: .utf8) }
+            let stringArray = value.compactMap{ Swift.String(bytes: $0, encoding: .utf8) }
+            return stringArray.isEmpty ? nil : stringArray
+            
+        default:
+            return nil
+        }
+    }
+    
+    public func toFloat() -> Float? {
+        switch self {
+        case .FloatArray(let value):
+            if value.count == 1 {
+                return value[0]
+            }
+            return nil
+            
+        default:
+            return nil
+        }
+    }
+
+    public func toInt() -> Int? {
+        switch self {
+        case .IntArray(let value):
+            if value.count == 1 {
+                return value[0]
+            }
+            return nil
+            
+        default:
+            return nil
+        }
+    }
+    
+    public func toBytes() -> Data? {
+        switch self {
+        case .BytesArray(let value):
+            if value.count == 1 {
+                return value[0]
+            }
+            return nil
+            
         default:
             return nil
         }
